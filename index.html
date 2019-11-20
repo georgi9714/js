@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IoT sensor with BeagleBone</title>
+    <script src = "/socket.io/socket.io.js" ></script>
+    <script>
+        // Establishing connection with server
+        var socket = io.connect(); /* global io */
+		var updateInterval;
+
+		// Update when data received on socket
+		socket.on('sensorData', function(data) {
+			var myData = JSON.parse(data);
+		
+            document.getElementById("bbbTime").innerHTML = 
+				"Humidity is " + myData.bbbTime;
+		});	
+		
+		socket.on('sensorDataa', function(dataa) {
+			var myDat = JSON.parse(dataa);
+		
+            document.getElementById("light").innerHTML = 
+				"Light is " + myDat.light;
+		});	
+		
+
+		// Set update interval
+	   function update() {
+			//updateInterval = setInterval(getValues, 1000);
+			updateInterval = setInterval(getValues2, 1000);
+		}
+
+        // Request sensor data
+        function getValues(){
+			// Emit message to get data
+			socket.emit('getHumidity');
+       }
+	   
+	    function getValues2(){
+			// Emit message to get data
+			socket.emit('getLightIntensity');
+       }
+	   
+	   function onLed(){
+			// Emit message to get data
+			socket.emit('onLed');
+       }
+	     function offLed(){
+			// Emit message to get data
+			socket.emit('offLed');
+       }
+	
+	   
+	     function openWindow(){
+			// Emit message to get data
+			socket.emit('openWindow');
+       }
+	     function closeWindow(){
+			// Emit message to get data
+			socket.emit('closeWindow');
+       }
+	     function submitLight(){
+			// Emit message to get data
+			socket.emit('setLight');
+       }
+	   
+
+    </script>
+</head>
+<body onload="update()">
+	<h2>Beaglebone date and time</h2>
+	<table style="width:10%">
+  <tr>
+  
+   <tr>
+     <th>Heater</th>
+    <th><button onclick="onHeater()"> on</button></th>
+    <th><button onclick="offHeater()"> off</button></th>
+  </tr>
+  <tr>
+     <th>Window</th>
+    <th><button onclick="openWindow()"> on</button></th>
+    <th><button onclick="closeWindow()"> off</button></th>
+  </tr>
+  
+  
+  </table>
+  
+  
+  <form  onsubmit="submitLight()">
+  Intensity <input type="text" id = "myId" name="fname"><br>
+  <input type="submit" value="Submit">
+  </form>
+	
+	<p id="bbbTime">----</p>
+	<p id="light">----</p>
+</div>
+</body>
+</html>
